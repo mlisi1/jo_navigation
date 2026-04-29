@@ -1,0 +1,50 @@
+/visodom/rgbd_odometry:
+  ros__parameters:
+    frame_id:                   base_link
+    odom_frame_id:              odom
+    publish_tf:                 true
+    approx_sync:                true
+    topic_queue_size:           20
+    sync_queue_size:            20
+    image_transport:            "compressed"
+    depth_transport:            "compressedDepth"
+
+    # Odometry tuning
+    Odom/Strategy:              "0"       # Frame-to-Map (more robust)
+    Odom/GuessMotion:           "true"    # use previous motion as initial guess
+    Odom/ImageDecimation:       "2"       # halve resolution before features → faster
+    Vis/DepthAsMask:            "false"
+    Vis/MaxFeatures:            "600"
+    Vis/MinInliers:             "15"
+    Vis/FeatureType:            "8"       # ORB, faster than GFTT for outdoor
+
+    # ICP refinement on top of visual (uses scan_cloud)
+    OdomF2M/ScanSubtractRadius: "0.1"
+    Icp/PointToPlane:           "true"
+    Icp/Iterations:             "10"
+    Icp/MaxCorrespondenceDistance: "0.1"
+
+    subscribe_scan_cloud:       true
+
+/visodom/rtabmap:
+  ros__parameters:
+    frame_id:                   base_link
+    odom_frame_id:              odom
+    subscribe_depth:            true
+    subscribe_scan_cloud:       false
+    approx_sync:                true
+    topic_queue_size:           20
+    sync_queue_size:            20
+    image_transport:            "compressed"
+    depth_transport:            "compressedDepth"
+
+
+/visodom/rtabmap_viz:
+  ros__parameters:
+    frame_id:                   base_link
+    odom_frame_id:              odom
+    subscribe_depth:            false
+    subscribe_scan_cloud:       false
+    approx_sync:                true
+    image_transport:            "compressed"
+    depth_transport:            "compressedDepth"
