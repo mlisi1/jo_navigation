@@ -1,7 +1,7 @@
 
 ekf_filter_node_odom:
   ros__parameters:
-    frequency: 60.0
+    frequency: 30.0
     two_d_mode: true
     publish_acceleration: true
     publish_tf: true
@@ -25,7 +25,7 @@ ekf_filter_node_odom:
 
     imu0: imu/data
     imu0_config: [false, false, false,
-                  false, false, false,   # don't fuse orientation, GLIM handles that
+                  false, false, true,   # don't fuse orientation, GLIM handles that
                   true, true, false,
                   false, false, true,    # fuse only vyaw from IMU
                   false, false, false]
@@ -38,7 +38,7 @@ ekf_filter_node_odom:
 
 ekf_filter_node_map:
   ros__parameters:
-    frequency: 60.0
+    frequency: 15.0
     two_d_mode: true  # Recommended to use 2d mode for nav2 in mostly planar environments
     print_diagnostics: true
     debug: true
@@ -50,9 +50,9 @@ ekf_filter_node_map:
     world_frame: map
 
     odom0: odometry/local
-    odom0_config: [true, true, true,   # x, y, z — don't fuse absolute position
-                   true, true, true,   # roll, pitch, yaw
-                   true,  true, false,   # vx only (tracked vehicle, no lateral)
+    odom0_config: [false, false, false,   # x, y, z — don't fuse absolute position
+                   false, false, true,   # roll, pitch, yaw
+                   false, false, false,   # vx only (tracked vehicle, no lateral)
                    false, false, true,    # vyaw
                    false, false, false]   # accelerations
     odom0_relative: false
@@ -75,7 +75,7 @@ ekf_filter_node_map:
 
 navsat_transform_node:
   ros__parameters:
-    frequency: 60.0
+    frequency: 4.0
     delay: 0.0
     zero_altitude: true
     magnetic_declination_radians: 0.0  # adjust for your location (Pisa ~0.04 rad)
@@ -84,7 +84,7 @@ navsat_transform_node:
     broadcast_cartesian_transform_as_parent_frame: true
     publish_filtered_gps: true         # republishes GPS in filtered form
     use_odometry_yaw: false            # use IMU for heading, not GPS
-    wait_for_datum: true              # compute datum from first fix
+    wait_for_datum: false              # compute datum from first fix
     # datum: [43.6851163, 10.4869685, 0.0]
     # use_local_cartesian: true
     

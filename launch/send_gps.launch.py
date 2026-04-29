@@ -33,12 +33,12 @@ def resolve_mission_file(context, *args, **kwargs):
         raise RuntimeError(f"Mission file not found: {mission_path}")
 
     node = Node(
-        package='jo_description',
+        package='jo_navigation',
         executable='send_gps_waypoints.py',
         name='gps_waypoint_follower',
         output='screen',
         emulate_tty=True,
-        prefix='xterm -e',
+        #prefix='xterm -e',
         parameters=[{
             'mission_file': mission_path,
             'mode': mode,
