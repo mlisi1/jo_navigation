@@ -2,12 +2,13 @@
   ros__parameters:
     frame_id:                   base_link
     odom_frame_id:              odom
-    publish_tf:                 true
+    publish_tf:                 false
     approx_sync:                true
     topic_queue_size:           20
     sync_queue_size:            20
     image_transport:            "compressed"
     depth_transport:            "compressedDepth"
+    database_path: ""
 
     # Odometry tuning
     Odom/Strategy:              "0"       # Frame-to-Map (more robust)
@@ -25,6 +26,7 @@
     Icp/MaxCorrespondenceDistance: "0.1"
 
     subscribe_scan_cloud:       true
+    database_path: ""
 
 /visodom/rtabmap:
   ros__parameters:
@@ -48,3 +50,4 @@
     approx_sync:                true
     image_transport:            "compressed"
     depth_transport:            "compressedDepth"
+    database_path: ""

@@ -21,6 +21,16 @@ ekf_filter_node_odom:
                    false, false, false]   # accelerations
     odom0_relative: false
     odom0_differential: false
+
+
+    odom1: visodom/odom
+    odom1_config: [true, true, true,   # x, y, z — don't fuse absolute position
+                   false, false, false,   # roll, pitch, yaw
+                   true,  false, false,   # vx only (tracked vehicle, no lateral)
+                   false, false, false,    # vyaw
+                   false, false, false]   # accelerations
+    odom1_relative: false
+    odom1_differential: false
     
 
     imu0: imu/data

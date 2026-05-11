@@ -58,6 +58,6 @@ def generate_launch_description():
 
     return LaunchDescription([
         rgbd_odometry,
-        rtabmap,
-        rtabmap_viz,
+        # rtabmap,
+        # rtabmap_viz,
     ])
