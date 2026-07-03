@@ -1,0 +1,37 @@
+groups:
+
+  localization:
+    color: yellow
+    label: "LOC"
+    nodes:
+      - glim_rosnode
+      - ekf_*
+      - navsat_transform_node
+      - rgbd_odometry
+      - rtabmap
+      - rtabmap_viz
+
+
+
+  navigation:
+    color: green
+    label: "NAV"
+    nodes:
+      - gps_waypoint_follower
+      - behavior_server
+      - bt_navigator
+      - controller_server
+      - lifecycle_manager_navigation
+      - planner_server
+      - smoother_server
+      - velocity_smoother
+      - waypoint_follower      
+    
+
+
+
+defaults:
+  color_mode: tag_only
+  show_group_tag: true
+  unmatched_color: null
+  tag_style: inverted
