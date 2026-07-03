@@ -22,7 +22,7 @@ bt_navigator_navigate_to_pose_rclcpp_node:
 controller_server:
   ros__parameters:
     odom_topic: /odometry/local
-    controller_frequency: 20.0
+    controller_frequency: 15.0
     transform_tolerance: 0.3  
     min_x_velocity_threshold: 0.001
     min_y_velocity_threshold: 0.5
@@ -36,10 +36,15 @@ controller_server:
       plugin: "nav2_controller::SimpleProgressChecker"
       required_movement_radius: 0.5
       movement_time_allowance: 10.0
+    # goal_checker:
+    #   plugin: "nav2_controller::SimpleGoalChecker"
+    #   xy_goal_tolerance: 0.7
+    #   yaw_goal_tolerance: 0.7
+    #   stateful: True
     goal_checker:
-      plugin: "nav2_controller::SimpleGoalChecker"
-      xy_goal_tolerance: 0.7
-      yaw_goal_tolerance: 0.7
+      plugin: "nav2_controller::PositionGoalChecker"
+      xy_goal_tolerance: 0.5
+      # yaw_goal_tolerance: 0.7
       stateful: True
     FollowPath:
       plugin: nav2_graceful_controller::GracefulController
@@ -47,16 +52,16 @@ controller_server:
       max_lookahead: 3.0
       initial_rotation: true
       initial_rotation_threshold: 0.75
-      prefer_final_rotation: true
+      prefer_final_rotation: false
       allow_backward: true
       k_phi: 2.0
       k_delta: 1.0
       beta: 0.4
       lambda: 2.0
-      v_linear_min: 0.1
+      v_linear_min: 0.2
       v_linear_max: 1.5
       v_angular_max: 5.0
-      v_angular_min_in_place: 0.25
+      v_angular_min_in_place: 1.0
       slowdown_radius: 1.5
       footprint_scaling_linear_vel: 0.5
       footprint_scaling_factor: 0.25
@@ -84,7 +89,7 @@ local_costmap:
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0
-        inflation_radius: 1.2
+        inflation_radius: 0.7
       voxel_layer:
         plugin: "nav2_costmap_2d::VoxelLayer"
         enabled: True
@@ -93,7 +98,7 @@ local_costmap:
         z_resolution: 0.05
         z_voxels: 16
         max_obstacle_height: 2.0
-        mark_threshold: 0
+        mark_threshold: 2
         observation_sources: scan
         scan:
           topic: /velodyne_points
@@ -105,6 +110,7 @@ local_costmap:
           raytrace_min_range: 0.0
           obstacle_max_range: 10.0
           obstacle_min_range: 0.0
+          min_obstacle_height: 0.15
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
@@ -114,7 +120,7 @@ global_costmap:
   global_costmap:
     ros__parameters:
       update_frequency: 10.0
-      publish_frequency: 1.0
+      publish_frequency: 2.0
       global_frame: map
       robot_base_frame: base_link
       transform_tolerance: 1.0  # Lookahead tolerance
@@ -141,13 +147,14 @@ global_costmap:
           raytrace_min_range: 0.0
           obstacle_max_range: 10.0
           obstacle_min_range: 0.0
+          min_obstacle_height: 0.15
       # static_layer:
       #   plugin: "nav2_costmap_2d::StaticLayer"
       #   map_subscribe_transient_local: True
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0
-        inflation_radius: 1.2
+        inflation_radius: 0.7
       always_send_full_costmap: True
 
 map_server:
@@ -167,14 +174,14 @@ map_saver:
 
 planner_server:
   ros__parameters:
-    expected_planner_frequency: 5.0
+    expected_planner_frequency: 15.0
     allow_partial_planning: True
     planner_patience: 15.0
     use_sim_time: True
     planner_plugins: ["GridBased"]
     GridBased:
       plugin: "nav2_navfn_planner::NavfnPlanner"
-      tolerance: 0.7
+      tolerance: 0.5
       use_astar: true
       allow_unknown: true
 
@@ -192,7 +199,7 @@ behavior_server:
   ros__parameters:
     costmap_topic: local_costmap/costmap_raw
     footprint_topic: local_costmap/published_footprint
-    cycle_frequency: 20.0
+    cycle_frequency: 15.0
     behavior_plugins: ["spin", "backup", "drive_on_heading", "assisted_teleop", "wait"]
     spin:
       plugin: "nav2_behaviors::Spin"
@@ -211,7 +218,7 @@ behavior_server:
     use_sim_time: True
     simulate_ahead_time: 5.0
     max_rotational_vel: 1.0
-    min_rotational_vel: 0.4
+    min_rotational_vel: 1.0
     rotational_acc_lim: 3.2
 
 robot_state_publisher:
@@ -221,26 +228,26 @@ robot_state_publisher:
 waypoint_follower:
   ros__parameters:
     use_sim_time: True
-    loop_rate: 20
+    loop_rate: 15
     stop_on_failure: false
     waypoint_task_executor_plugin: "wait_at_waypoint"
     wait_at_waypoint:
       plugin: "nav2_waypoint_follower::WaitAtWaypoint"
       enabled: True
-      waypoint_pause_duration: 1000
+      waypoint_pause_duration: 3000
 
 velocity_smoother:
   ros__parameters:
     use_sim_time: True
-    smoothing_frequency: 20.0
+    smoothing_frequency: 15.0
     scale_velocities: False
     feedback: "OPEN_LOOP"
-    max_velocity: [0.56, 0.0, 1.0]
-    min_velocity: [-0.26, 0.0, -1.0]
+    max_velocity: [2.0, 0.0, 2.0]
+    min_velocity: [-2.0, 0.0, -2.0]
     max_accel: [2.5, 0.0, 3.2]
     max_decel: [-2.5, 0.0, -3.2]
     odom_topic: "/odometry/local"
     odom_duration: 0.1
-    deadband_velocity: [0.0, 0.0, 0.0]
+    deadband_velocity: [0.2, 0.0, 0.7]
     velocity_timeout: 1.0
 
