@@ -168,6 +168,8 @@ class GpsWaypointFollower(Node):
         """Send all waypoints in a single action call."""
         self.get_logger().info('AUTO mode: sending all waypoints at once.')
 
+        self._last_feedback_index = None
+
         goal = FollowGPSWaypoints.Goal()
         goal.number_of_loops = 0
         goal.gps_poses = [self._make_geopose(wp) for wp in self._waypoints]
@@ -185,6 +187,8 @@ class GpsWaypointFollower(Node):
         """Send one waypoint at a time, waiting for user input between each."""
         self.get_logger().info('STEP mode: press Enter to advance to next waypoint.')
         self._step_index = 0
+        self._reached_count = 0
+        self._failed_count = 0
         self._send_next_step()
 
     def _send_next_step(self):
@@ -220,6 +224,34 @@ class GpsWaypointFollower(Node):
         self._send_next_step()
 
     # ──────────────────────────────────────────────────────────────────────
+    # Mission summary
+    # ──────────────────────────────────────────────────────────────────────
+
+    def _log_mission_summary(self, reached: int, failed: int, total: int):
+        """Log a large, hard-to-miss banner summarizing the whole mission."""
+        bar   = '#' * 60
+        title = 'MISSION COMPLETE' if failed == 0 else 'MISSION FINISHED WITH FAILURES'
+
+        banner = '\n'.join([
+            '',
+            bar,
+            bar,
+            '',
+            f'   {title}'.upper(),
+            '',
+            f'   WAYPOINTS REACHED : {reached}/{total}',
+            f'   WAYPOINTS FAILED  : {failed}/{total}',
+            '',
+            bar,
+            bar,
+        ])
+
+        if failed == 0:
+            self.get_logger().info(banner)
+        else:
+            self.get_logger().warn(banner)
+
+    # ──────────────────────────────────────────────────────────────────────
     # Action callbacks — AUTO mode
     # ──────────────────────────────────────────────────────────────────────
 
@@ -235,16 +267,24 @@ class GpsWaypointFollower(Node):
 
     def _result_callback(self, future):
         result = future.result().result
-        status = future.result().status
+        total  = len(self._waypoints)
 
-        # status 4 = SUCCEEDED, status 6 = ABORTED
-        if status == 4:
-            self.get_logger().info('Navigation completed successfully.')
-        else:
-            self.get_logger().warn(
-                f'Navigation finished with status {status}. '
-                f'Missed waypoints: {result.missed_waypoints}'
-            )
+        missed_by_index = {m.index: m for m in result.missed_waypoints}
+
+        for i, wp in enumerate(self._waypoints):
+            if i in missed_by_index:
+                self.get_logger().warn(
+                    f'Waypoint {i + 1}/{total} "{wp["label"]}" FAILED '
+                    f'(error_code={missed_by_index[i].error_code}).'
+                )
+            else:
+                self.get_logger().info(
+                    f'Waypoint {i + 1}/{total} "{wp["label"]}" reached.'
+                )
+
+        failed  = len(missed_by_index)
+        reached = total - failed
+        self._log_mission_summary(reached, failed, total)
         rclpy.shutdown()
 
     # ──────────────────────────────────────────────────────────────────────
@@ -265,16 +305,23 @@ class GpsWaypointFollower(Node):
         wp     = self._waypoints[self._step_index]
 
         if status == 4:
-            self.get_logger().info(f'Reached "{wp["label"]}".')
+            self._reached_count += 1
+            self.get_logger().info(
+                f'Waypoint {self._step_index + 1}/{len(self._waypoints)} "{wp["label"]}" reached.'
+            )
         else:
+            self._failed_count += 1
             self.get_logger().warn(
-                f'Navigation to "{wp["label"]}" ended with status {status}.'
+                f'Waypoint {self._step_index + 1}/{len(self._waypoints)} "{wp["label"]}" FAILED '
+                f'(status={status}).'
             )
 
         self._step_index += 1
 
         if self._step_index >= len(self._waypoints):
-            self.get_logger().info('Mission complete.')
+            self._log_mission_summary(
+                self._reached_count, self._failed_count, len(self._waypoints)
+            )
             rclpy.shutdown()
             return
 
@@ -288,10 +335,21 @@ class GpsWaypointFollower(Node):
     # ──────────────────────────────────────────────────────────────────────
 
     def _feedback_callback(self, feedback_msg):
-        fb = feedback_msg.feedback
+        # Only relevant in AUTO mode: STEP mode sends one waypoint per goal,
+        # so its feedback is always index 0 and is redundant with the
+        # "[n/total] Navigating to ..." message already logged per step.
+        if self._mode != 'auto':
+            return
+
+        idx = feedback_msg.feedback.current_waypoint
+        if idx == self._last_feedback_index or idx >= len(self._waypoints):
+            return
+        self._last_feedback_index = idx
+
+        wp = self._waypoints[idx]
         self.get_logger().info(
-            f'Current waypoint index: {fb.current_waypoint}',
-            throttle_duration_sec=2.0
+            f'Waypoint {idx + 1}/{len(self._waypoints)}: navigating to "{wp["label"]}" '
+            f'(lat={wp["lat"]:.6f}, lon={wp["lon"]:.6f})'
         )
 
 

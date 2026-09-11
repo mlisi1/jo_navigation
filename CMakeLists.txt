@@ -12,7 +12,8 @@ install(
 ament_python_install_package(scripts)
 
 install(
-  PROGRAMS  scripts/send_gps_waypoints.py 
+  PROGRAMS  scripts/send_gps_waypoints.py
+            scripts/csv_to_mission.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
