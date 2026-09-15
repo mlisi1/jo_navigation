@@ -1,0 +1,69 @@
+# GPS Waypoint Mission File
+# ─────────────────────────
+# Auto-generated from "transetto_bbq.csv" by csv_to_mission.py.
+# Altitude source: ellipsoidal
+# Review the point order below and edit the "mission" list to match
+# the desired visiting order before running the robot.
+
+points:
+  wp1:
+    lat: 43.72356298
+    lon: 10.33040254
+    alt: 49.030
+
+  wp2:
+    lat: 43.72356838
+    lon: 10.33048002
+    alt: 49.001
+
+  wp3:
+    lat: 43.72357417
+    lon: 10.33056129
+    alt: 48.985
+
+  wp4:
+    lat: 43.72358192
+    lon: 10.33063943
+    alt: 49.007
+
+  wp5:
+    lat: 43.72358725
+    lon: 10.33072075
+    alt: 48.969
+
+  wp6:
+    lat: 43.72359250
+    lon: 10.33079699
+    alt: 48.948
+
+  wp7:
+    lat: 43.72359668
+    lon: 10.33087219
+    alt: 48.920
+
+  wp8:
+    lat: 43.72360283
+    lon: 10.33095326
+    alt: 48.995
+
+  wp9:
+    lat: 43.72360843
+    lon: 10.33102980
+    alt: 49.020
+
+  wp10:
+    lat: 43.72361515
+    lon: 10.33112453
+    alt: 49.142
+
+mission:
+  - wp1
+  - wp2
+  - wp3
+  - wp4
+  - wp5
+  - wp6
+  - wp7
+  - wp8
+  - wp9
+  - wp10

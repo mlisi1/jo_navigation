@@ -1,0 +1,147 @@
+# GPS Waypoint Mission File
+# ─────────────────────────
+# Auto-generated from "sr_backbbq_20260914.csv" by csv_to_mission.py.
+# Altitude source: ellipsoidal
+# Review the point order below and edit the "mission" list to match
+# the desired visiting order before running the robot.
+
+points:
+  wp2:
+    lat: 43.72338015
+    lon: 10.33085176
+    alt: 48.801
+
+  wp3:
+    lat: 43.72333492
+    lon: 10.33084985
+    alt: 48.865
+
+  wp4:
+    lat: 43.72328648
+    lon: 10.33085068
+    alt: 48.880
+
+  wp5:
+    lat: 43.72323547
+    lon: 10.33086616
+    alt: 48.810
+
+  wp6:
+    lat: 43.72319764
+    lon: 10.33091564
+    alt: 49.011
+
+  wp7:
+    lat: 43.72316084
+    lon: 10.33097137
+    alt: 49.126
+
+  wp8:
+    lat: 43.72311373
+    lon: 10.33100308
+    alt: 49.208
+
+  wp9:
+    lat: 43.72306527
+    lon: 10.33099216
+    alt: 49.131
+
+  wp10:
+    lat: 43.72301108
+    lon: 10.33096386
+    alt: 48.947
+
+  wp11:
+    lat: 43.72298355
+    lon: 10.33090163
+    alt: 49.030
+
+  wp12:
+    lat: 43.72296577
+    lon: 10.33084851
+    alt: 49.084
+
+  wp13:
+    lat: 43.72291894
+    lon: 10.33081761
+    alt: 49.067
+
+  wp14:
+    lat: 43.72298077
+    lon: 10.33083997
+    alt: 49.126
+
+  wp15:
+    lat: 43.72302393
+    lon: 10.33087709
+    alt: 49.000
+
+  wp16:
+    lat: 43.72307655
+    lon: 10.33088496
+    alt: 48.988
+
+  wp17:
+    lat: 43.72312743
+    lon: 10.33088401
+    alt: 49.080
+
+  wp18:
+    lat: 43.72317740
+    lon: 10.33087414
+    alt: 49.027
+
+  wp19:
+    lat: 43.72323456
+    lon: 10.33085950
+    alt: 48.814
+
+  wp20:
+    lat: 43.72326910
+    lon: 10.33080842
+    alt: 48.848
+
+  wp21:
+    lat: 43.72329044
+    lon: 10.33073582
+    alt: 49.009
+
+  wp22:
+    lat: 43.72334089
+    lon: 10.33074192
+    alt: 48.925
+
+  wp23:
+    lat: 43.72336252
+    lon: 10.33080397
+    alt: 48.811
+
+  wp24:
+    lat: 43.72338684
+    lon: 10.33086616
+    alt: 48.806
+
+mission:
+  - wp2
+  - wp3
+  - wp4
+  - wp5
+  - wp6
+  - wp7
+  - wp8
+  - wp9
+  - wp10
+  - wp11
+  - wp12
+  - wp13
+  - wp14
+  - wp15
+  - wp16
+  - wp17
+  - wp18
+  - wp19
+  - wp20
+  - wp21
+  - wp22
+  - wp23
+  - wp24
