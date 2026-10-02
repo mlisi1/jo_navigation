@@ -1,0 +1,11 @@
+<library path="dynamic_obstacle_layer">
+  <class type="jo_sim::DynamicObstacleLayer"
+         base_class_type="nav2_costmap_2d::Layer">
+    <description>
+      Marks a velocity-elongated rectangular footprint in the costmap for each
+      tracked dynamic obstacle received on
+      /onboard_detector/tracked_dynamic_obstacles.  The mark is active only for
+      the current costmap update frame — no persistence, no trail.
+    </description>
+  </class>
+</library>

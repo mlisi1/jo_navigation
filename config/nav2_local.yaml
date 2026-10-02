@@ -79,7 +79,7 @@ local_costmap:
       buffer_duration: 60.0     # Keep 60 seconds of transform history
       resolution: 0.05
       robot_radius: 0.52
-      plugins: ["voxel_layer", "inflation_layer"]
+      plugins: ["voxel_layer", "dynamic_obstacle_layer", "inflation_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         cost_scaling_factor: 3.0
@@ -104,6 +104,23 @@ local_costmap:
           raytrace_min_range: 0.0
           obstacle_max_range: 10.0
           obstacle_min_range: 0.0
+      dynamic_obstacle_layer:
+        # Obstacles tracked by onboard_detector_v2 (+ GLIM bbox rejection),
+        # expected in the costmap global frame (odom). Inactive without them.
+        plugin: "jo_sim::DynamicObstacleLayer"
+        enabled: True
+        obstacle_padding: 0.15
+        tracking_timeout: 1.0
+        use_glim_rejection_obstacles: True
+        glim_rejection_obstacles_topic: /glim_ros/rejection_obstacles
+        glim_rejection_timeout: 0.5
+        glim_rejection_velocity_scale: 0.75
+        velocity_inflation_k: 3.0     # long zone ahead along the velocity
+        rear_inflation_k: 0.5         # almost free behind the obstacle
+        lateral_inflation_k: 0.2
+        dynamic_risk_cost: 252
+        dynamic_risk_min_cost: 120
+        risk_velocity_threshold: 0.2
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
         map_subscribe_transient_local: True
@@ -125,7 +142,7 @@ global_costmap:
       rolling_window: true
       width: 40
       height: 40
-      plugins: ["obstacle_layer", "inflation_layer"]
+      plugins: ["obstacle_layer", "dynamic_obstacle_layer", "inflation_layer"]
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
@@ -140,6 +157,23 @@ global_costmap:
           raytrace_min_range: 0.0
           obstacle_max_range: 10.0
           obstacle_min_range: 0.0
+      dynamic_obstacle_layer:
+        # Obstacles tracked by onboard_detector_v2 (+ GLIM bbox rejection),
+        # expected in the costmap global frame (odom). Inactive without them.
+        plugin: "jo_sim::DynamicObstacleLayer"
+        enabled: True
+        obstacle_padding: 0.15
+        tracking_timeout: 1.0
+        use_glim_rejection_obstacles: True
+        glim_rejection_obstacles_topic: /glim_ros/rejection_obstacles
+        glim_rejection_timeout: 0.5
+        glim_rejection_velocity_scale: 0.75
+        velocity_inflation_k: 3.0     # long zone ahead along the velocity
+        rear_inflation_k: 0.5         # almost free behind the obstacle
+        lateral_inflation_k: 0.2
+        dynamic_risk_cost: 252
+        dynamic_risk_min_cost: 140
+        risk_velocity_threshold: 0.2
       # static_layer:
       #   plugin: "nav2_costmap_2d::StaticLayer"
       #   map_subscribe_transient_local: True
