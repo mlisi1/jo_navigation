@@ -65,7 +65,7 @@ public:
       clock_ = node->get_clock();
 
       sub_ = node->create_subscription<jo_msgs::msg::ObstacleArray>(
-        "/onboard_detector/tracked_dynamic_obstacles",
+        "/perception/tracked_dynamic_obstacles",
         10,
         [this](const jo_msgs::msg::ObstacleArray::SharedPtr msg) {
           std::lock_guard<std::mutex> lock(mutex_);

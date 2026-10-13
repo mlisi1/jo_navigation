@@ -10,7 +10,7 @@ find_package(nav2_costmap_2d REQUIRED)
 find_package(pluginlib REQUIRED)
 
 # dynamic_obstacle_layer: costmap plugin marking the obstacles tracked by
-# onboard_detector_v2 (and GLIM's bbox rejection), ported from jo-sim_lv-dot
+# jo_detector_v2 (and GLIM's bbox rejection), ported from jo-sim_lv-dot
 add_library(dynamic_obstacle_layer SHARED
   src/dynamic_obstacle_layer.cpp)
 target_compile_features(dynamic_obstacle_layer PUBLIC cxx_std_17)
