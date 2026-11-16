@@ -101,12 +101,26 @@ def generate_launch_description():
         )]
 
 
-    navsat_transform_node = Node(
+    # navsat_yaw_offset overrides yaw_offset of the params file (the simulator passes the spawn
+    # yaw: there the odometry yaw is 0 when facing east, the real Xsens reads 0 at north)
+    navsat_yaw_offset_arg = DeclareLaunchArgument(
+        'navsat_yaw_offset', default_value='',
+        description='Override navsat_transform yaw_offset [rad] (empty: from the params file)')
+
+    def navsat_transform(context):
+        params = [LaunchConfiguration('localization_params'),
+                  {'use_sim_time': LaunchConfiguration('use_sim_time')}]
+        yaw_offset = LaunchConfiguration('navsat_yaw_offset').perform(context)
+        if yaw_offset:
+            params.append({'yaw_offset': float(yaw_offset)})
+        return [navsat_transform_node(params)]
+
+    navsat_transform_node = lambda params: Node(
         package='robot_localization',
         executable='navsat_transform_node',
         name='navsat_transform_node',
         output='log',
-        parameters=[LaunchConfiguration('localization_params'), {'use_sim_time': LaunchConfiguration('use_sim_time')}],
+        parameters=params,
         arguments=['--ros-args','--log-level','WARN'],
         remappings=[
             ('imu', 'imu/data'),
@@ -143,7 +157,8 @@ def generate_launch_description():
         *declare_glim_args(pkg_dir),
         robot_localization_global,
         OpaqueFunction(function=robot_localization_local),
-        navsat_transform_node,
+        navsat_yaw_offset_arg,
+        OpaqueFunction(function=navsat_transform),
         set_zone,
         glim,
         visodom,
