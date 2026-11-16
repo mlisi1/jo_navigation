@@ -61,7 +61,9 @@ def glim_node(context, mode):
         executable='glim_rosnode',
         output='screen',
         emulate_tty=True,
-        additional_env={'__NV_PRIME_RENDER_OFFLOAD': '0'},
+        # GLIM's viewer runs on the default GPU: on hybrid-GPU hosts (PRIME offload enabled for the
+        # container) both variables must be cleared, offload=0 with vendor=nvidia fails (GLXBadFBConfig)
+        additional_env={'__NV_PRIME_RENDER_OFFLOAD': '0', '__GLX_VENDOR_LIBRARY_NAME': ''},
         parameters=[params],
     )]
 
