@@ -119,12 +119,13 @@ def generate_launch_description():
     set_zone = TimerAction(
         period=1.0,
         actions=[
+            # retried: a single call that fails (e.g. its DDS participant cannot be created at a
+            # busy startup) leaves navsat_transform in the wrong UTM zone
             ExecuteProcess(
-            cmd=[
-                'ros2', 'service', 'call', '/setUTMZone',
-                'robot_localization/srv/SetUTMZone',
-                '{utm_zone: 32N}'
-            ],
+            cmd=['bash', '-c',
+                 'for i in $(seq 1 10); do '
+                 'ros2 service call /setUTMZone robot_localization/srv/SetUTMZone '
+                 '"{utm_zone: 32N}" && exit 0; sleep 2; done; exit 1'],
             output='screen'
             )
         ]
