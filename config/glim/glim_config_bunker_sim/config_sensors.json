@@ -48,10 +48,11 @@
     "imu_bias_noise": 1e-6,
     // LiDAR config
     "global_shutter_lidar": true,
+    // sim: exact, from the jo_description URDF (imu_link w.r.t. velodyne, both aligned with base_link)
     "T_lidar_imu": [
-      0.192, 
-      -0.003, 
-      -0.318,
+      -0.0514,
+      0.0,
+      -0.3753,
       0.0,
       0.0,
       0.0,
