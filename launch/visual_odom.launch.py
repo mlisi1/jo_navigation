@@ -15,13 +15,15 @@ def generate_launch_description():
         'visual_odom.yaml'
     )
 
+    use_sim_time = LaunchConfiguration('use_sim_time')
+
     rgbd_odometry = Node(
         package='rtabmap_odom',
         executable='rgbd_odometry',
         name='rgbd_odometry',
         namespace='visodom',
         output='screen',
-        parameters=[config],
+        parameters=[config, {'use_sim_time': use_sim_time}],
         # Hide the per-frame "Odom: quality=..." INFO spam; warnings still show
         arguments=['--ros-args', '--log-level', 'warn'],
         remappings=[
@@ -42,7 +44,7 @@ def generate_launch_description():
             name='rtabmap',
             namespace='visodom',
             output='screen',
-            parameters=[config, {'database_path': os.path.join(map_dir, 'rtabmap.db')}],
+            parameters=[config, {'database_path': os.path.join(map_dir, 'rtabmap.db'), 'use_sim_time': use_sim_time}],
             arguments=['--ros-args', '--log-level', 'warn'],
             remappings=[
                 ('rgb/image',       '/front_camera/camera/color/image_raw'),
@@ -63,7 +65,7 @@ def generate_launch_description():
         name='rtabmap_viz',
         namespace='visodom',
         output='screen',
-        parameters=[config],
+        parameters=[config, {'use_sim_time': use_sim_time}],
         remappings=[
             ('rgb/image',       '/front_camera/camera/color/image_raw'),
             ('rgb/camera_info', '/front_camera/camera/color/camera_info'),
@@ -73,6 +75,11 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        DeclareLaunchArgument(
+            'use_sim_time',
+            default_value='false',
+            description='Use simulation (Gazebo) clock if true'
+        ),
         DeclareLaunchArgument(
             'vslam',
             default_value='false',

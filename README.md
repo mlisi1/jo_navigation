@@ -88,3 +88,17 @@ This is a modified version of the local navigation configuration adapted to cons
 - [ROS 2 TF2](https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Tf2.html)
 - [jo_sim](https://github.com/mlisi1/jo_sim.git)
 - [jo_zotac](https://github.com/mlisi1/jo-zotac.git)
+
+## GLIM (glim_ros2@dev)
+
+The localization launch files require the [mlisi1/glim_ros2](https://github.com/mlisi1/glim_ros2) `dev`
+interface (and koide3/glim >= 1a197c9, which needs gtsam_points newer than 1.2.2: build it from source):
+
+- the EKFs fuse `glim_ros/odometry/local` (optimized odometry, expressed in `base_link`);
+- `localization.launch.py`: `map_odom_mode: external` (EKF owns `odom -> base_link`, GLIM owns `map -> odom`);
+- `localization_gps.launch.py`: `publish_tf: false` (EKFs and navsat_transform own the tree);
+- maps are saved to `/saved_maps` (`ros2 service call /glim_ros/save_map std_srvs/srv/Trigger`);
+- `glim_view:=false` drops the viewer through the `extension_modules` parameter;
+- `glim_config:=<dir>`: GLIM config directory (`glim_config_bunker` on the robot, `glim_config_bunker_sim` in jo_sim).
+
+Visual odometry is skipped with a message when RTAB-Map (`rtabmap_odom`) is not installed.
