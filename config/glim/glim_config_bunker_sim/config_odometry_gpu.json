@@ -61,7 +61,7 @@
     "keyframe_min_overlap": 0.01,
     "keyframe_max_overlap": 0.5,
     "keyframe_delta_trans": 1.0,
-    "keyframe_delta_rot": 0.5,
+    "keyframe_delta_rot": 0.25,
     "keyframe_entropy_thresh": 0.99,
     // MISC
     "save_imu_rate_trajectory": true,

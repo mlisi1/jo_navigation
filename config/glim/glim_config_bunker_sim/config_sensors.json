@@ -41,12 +41,13 @@
   // rooftop: [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0]
   */
   "sensors": {
-    // IMU config
+    // IMU config (sim: matched to the Gazebo IMU noise in jo_description sim_noise.xacro,
+    // lower than the Xsens values in glim_config_bunker)
     "imu_acc_noise": 0.01,
     "imu_gyro_noise": 0.005,
     "imu_int_noise": 0.0001,
     "imu_bias_noise": 1e-6,
-    // LiDAR config
+    // LiDAR config (sim: the RGL sweep is captured at one instant, per-point times are 0)
     "global_shutter_lidar": true,
     // sim: exact, from the jo_description URDF (imu_link w.r.t. velodyne, both aligned with base_link)
     "T_lidar_imu": [

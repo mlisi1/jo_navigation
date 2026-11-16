@@ -16,6 +16,7 @@
     "distance_near_thresh": 0.5,
     "distance_far_thresh": 100.0,
     "use_random_grid_downsampling": true,
+    // sim: GLIM default; the robot uses 0.2 (glim_config_bunker). Lighter while Gazebo shares the GPU
     "downsample_resolution": 1.0,
     "random_downsample_target": 10000,
     "random_downsample_rate": 0.1,
