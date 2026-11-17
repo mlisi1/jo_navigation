@@ -39,6 +39,7 @@
     "imu_time_offset": 0.0,
     "points_time_offset": 0.0,
     "acc_scale": 1.0,
+    "ang_scale": 1.0,
     // TF config
     "imu_frame_id": "imu_link",
     "lidar_frame_id": "velodyne",
@@ -57,6 +58,7 @@
     // Topics
     "imu_topic": "/imu/data",
     "points_topic": "/velodyne_points",
-    "image_topic": "/camera/image/compressed"
+    // empty: no image subscription (no loaded module uses images)
+    "image_topic": ""
   }
 }

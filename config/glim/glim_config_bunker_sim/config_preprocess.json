@@ -24,6 +24,7 @@
     "outlier_removal_k": 10,
     "outlier_std_mul_factor": 1.0,
     "k_correspondences": 10,
+    "enable_cropbox_filter": false,
     "num_threads": 2
   }
 }

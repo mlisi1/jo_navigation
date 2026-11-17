@@ -21,6 +21,11 @@ def declare_glim_args(pkg_dir):
             'glim_config',
             default_value=os.path.join(pkg_dir, 'config', 'glim', 'glim_config_bunker'),
             description='GLIM config directory (the simulator uses glim_config_bunker_sim)'),
+        DeclareLaunchArgument(
+            'glim_anchor_frame',
+            default_value='imu',
+            description='Origin of the GLIM map/odom frames: imu (initial IMU pose) or base '
+                        '(initial base pose, x y z yaw; the simulator uses base)'),
     ]
 
 
@@ -44,6 +49,7 @@ def glim_node(context, mode):
 
     params['config_path'] = glim_config
     params['odom_child_frame'] = 'base'
+    params['anchor_frame'] = LaunchConfiguration('glim_anchor_frame').perform(context)
     params['map_save_directory'] = '/saved_maps'
     if mode == 'local':
         params['map_odom_mode'] = 'external'

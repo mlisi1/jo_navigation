@@ -30,6 +30,7 @@
     "isam2_relinearize_skip": 1,
     "isam2_relinearize_thresh": 0.1,
     // Misc
+    "compute_covs": true,
     "num_threads": 4
   }
 }

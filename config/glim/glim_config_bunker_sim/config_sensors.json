@@ -59,6 +59,9 @@
       0.0,
       1.0
     ],
+    // Point fields (the Velodyne driver and the sim emulation provide both)
+    "intensity_field": "intensity",
+    "ring_field": "ring",
     // LiDAR per-point time settings
     "autoconf_perpoint_times": true,
     "autoconf_prefer_frame_time": false,

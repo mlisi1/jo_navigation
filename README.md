@@ -99,6 +99,7 @@ interface (and koide3/glim >= 1a197c9, which needs gtsam_points newer than 1.2.2
 - `localization_gps.launch.py`: `publish_tf: false` (EKFs and navsat_transform own the tree);
 - maps are saved to `/saved_maps` (`ros2 service call /glim_ros/save_map std_srvs/srv/Trigger`);
 - `glim_view:=false` drops the viewer through the `extension_modules` parameter;
-- `glim_config:=<dir>`: GLIM config directory (`glim_config_bunker` on the robot, `glim_config_bunker_sim` in jo_sim).
+- `glim_config:=<dir>`: GLIM config directory (`glim_config_bunker` on the robot, `glim_config_bunker_sim` in jo_sim);
+- `glim_anchor_frame:=imu|base`: origin of GLIM's map/odom frames, the initial IMU pose (default, upstream behavior) or the initial base pose (x, y, z, yaw; jo_sim uses `base`).
 
 Visual odometry is skipped with a message when RTAB-Map (`rtabmap_odom`) is not installed.

@@ -63,6 +63,9 @@
     "keyframe_delta_trans": 1.0,
     "keyframe_delta_rot": 0.25,
     "keyframe_entropy_thresh": 0.99,
+    // compute_covs: report GLIM's marginal covariances (otherwise glim_ros reports fallback variances)
+    "compute_covs": true,
+    "validate_imu": true,
     // MISC
     "save_imu_rate_trajectory": true,
     "num_threads": 5
