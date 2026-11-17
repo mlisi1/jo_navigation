@@ -30,6 +30,8 @@
     "vgicp_voxelmap_levels": 1,
     "vgicp_voxelmap_scaling_factor": 2.0,
     // Optimizer params
+    // compute_covs: report GLIM's marginal covariances (otherwise glim_ros reports fallback variances)
+    "compute_covs": true,
     "validate_imu": true,
     "save_imu_rate_trajectory": true,
     "num_threads": 2
