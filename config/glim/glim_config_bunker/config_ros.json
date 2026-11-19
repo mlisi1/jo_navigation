@@ -58,6 +58,6 @@
     // Topics
     "imu_topic": "/imu/data",
     "points_topic": "/velodyne_points",
-    "image_topic": "/camera/image/compressed"
+    "image_topic": ""   // no extension module uses images: no subscription
   }
 }

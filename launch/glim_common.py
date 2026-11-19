@@ -23,9 +23,9 @@ def declare_glim_args(pkg_dir):
             description='GLIM config directory (the simulator uses glim_config_bunker_sim)'),
         DeclareLaunchArgument(
             'glim_anchor_frame',
-            default_value='imu',
-            description='Origin of the GLIM map/odom frames: imu (initial IMU pose) or base '
-                        '(initial base pose, x y z yaw; the simulator uses base)'),
+            default_value='base',
+            description='Origin of the GLIM map/odom frames: base (initial base pose, x y z yaw, '
+                        'so odometry starts at 0 like the EKF) or imu (initial IMU pose, upstream)'),
     ]
 
 
@@ -71,6 +71,9 @@ def glim_node(context, mode):
         # container) both variables must be cleared, offload=0 with vendor=nvidia fails (GLXBadFBConfig)
         additional_env={'__NV_PRIME_RENDER_OFFLOAD': '0', '__GLX_VENDOR_LIBRARY_NAME': ''},
         parameters=[params],
+        # GLIM saves its dump (graph, map.pcd, grid) after SIGINT; large maps need more than the
+        # default 5 s before launch escalates to SIGTERM
+        sigterm_timeout='30',
     )]
 
 
