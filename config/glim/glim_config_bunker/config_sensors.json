@@ -42,8 +42,11 @@
   */
   "sensors": {
     // IMU config
-    "imu_acc_noise": 0.05,
-    "imu_gyro_noise": 0.02,
+    // From the Allan variance of a 3.2 h static Xsens recording (jo-zotac
+    // calibration/runs/20260930_114641_allan__imu_static_20260930): measured worst axis
+    // x10 (vibration margin). Previous values (GLIM defaults): acc 0.05, gyro 0.02.
+    "imu_acc_noise": 5.5e-3,
+    "imu_gyro_noise": 1.0e-3,
     "imu_int_noise": 0.001,
     "imu_bias_noise": 1e-5,
     // LiDAR config
