@@ -6,6 +6,7 @@ expressed in base_link).
 """
 import os
 import re
+import shutil
 
 from ament_index_python.packages import PackageNotFoundError, get_package_share_directory
 from launch.actions import DeclareLaunchArgument, LogInfo
@@ -13,6 +14,12 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 VIEWER = 'libstandard_viewer.so'
+MAP_DIR = '/saved_maps'
+# GLIM's shutdown dump (graph, submaps, map.pcd, grid). It lives under MAP_DIR (a volume) so it
+# survives the container, and it is the LAST run only: cleared at every GLIM start (GLIM writes into
+# the folder without emptying it, so a smaller map would mix with the old submaps). save_map copies
+# it, or, with GLIM running, saves through the service into MAP_DIR/<ts>_<name>.
+LAST_RUN_DUMP = os.path.join(MAP_DIR, 'glim_last_run')
 
 
 def declare_glim_args(pkg_dir):
@@ -50,7 +57,9 @@ def glim_node(context, mode):
     params['config_path'] = glim_config
     params['odom_child_frame'] = 'base'
     params['anchor_frame'] = LaunchConfiguration('glim_anchor_frame').perform(context)
-    params['map_save_directory'] = '/saved_maps'
+    params['map_save_directory'] = MAP_DIR
+    params['dump_path'] = LAST_RUN_DUMP
+    shutil.rmtree(LAST_RUN_DUMP, ignore_errors=True)
     if mode == 'local':
         params['map_odom_mode'] = 'external'
         params['map_odom_planar'] = True
