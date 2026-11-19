@@ -1,37 +1,186 @@
+# DendROS config for jo_navigation: the same groups, colours and keywords as
+# jo-zotac's jo_bringup/config/dendROS.yaml (GLIM, LOC, NAV, MIS only). Keep the two in step.
+# It is the primary config when a jo_navigation launch file is started directly (send_gps,
+# localization, navigation); otherwise it is merged into the bringup's / jo_sim's.
+#
+# Keywords: only INFO / stdout messages (WARN and ERROR are already coloured by ROS):
+#   bold white = start, bold mint = ended well, bold crimson inverted = ended badly at INFO,
+#   bold violet = cancel / preempt / reset, bold <group> = key facts.
+
 groups:
+  glim:
+    color: "#B48CFF"
+    label: "GLIM"
+    nodes:
+      - glim_rosnode       # executable
+      - glim_ros           # node
+      - rviz_viewer        # node of GLIM's ROS output module
+    highlight:
+      - word: "load lib\\w+\\.so"
+        regex: true
+        color: "@#B48CFF"
+      - word: "TF: .*"          # the TF ownership summary at start
+        regex: true
+        color: "@#B48CFF"
+      - word: "auto-detected (IMU|LiDAR) frame ID: \\S+"
+        regex: true
+        color: "@#B48CFF"
+      - word: "(map saved to|saving to) \\S+"
+        regex: true
+        color: "bold mint"
+      - word: "saved \\S+ \\(.*\\)"
+        regex: true
+        color: "bold mint"
+      - word: "waiting for (odometry estimation|local mapping|global mapping)"
+        regex: true
+        color: "bold violet"
+      - word: "an extension module requested termination; shutting down"
+        color: "bold violet"
 
   localization:
-    color: yellow
+    color: "#36D6C3"
     label: "LOC"
     nodes:
-      - glim_rosnode
-      - ekf_*
+      - ekf_node           # executable (all EKFs)
+      - ekf_filter_node
+      - ekf_filter_node_odom
+      - ekf_filter_node_map
+      - "ekf_*"
       - navsat_transform_node
       - rgbd_odometry
       - rtabmap
       - rtabmap_viz
-
-
+      - "rgbd_*"
+      - "rtabmap_*"
+    highlight:
+      # navsat_transform (INFO)
+      - word: "Datum (\\(latitude, longitude, altitude\\)|\\S+ coordinate) is \\(.*\\)"
+        regex: true
+        color: "@#36D6C3"
+      - word: "UTM zone set to .*"
+        regex: true
+        color: "@#36D6C3"
+      - word: "Corrected for magnetic declination of \\S+"
+        regex: true
+        color: "@#36D6C3"
+      # EKF (INFO)
+      - word: "Received set_pose request"
+        color: "bold violet"
+      - word: "Received a request to reset filter"
+        color: "bold violet"
+      - word: "Enabling filter"
+        color: "bold mint"
+      # RTAB-Map odometry status line (INFO, every frame)
+      - word: "quality=\\d+"
+        regex: true
+        color: "@#36D6C3"
 
   navigation:
-    color: green
+    color: "#5BD65B"
     label: "NAV"
     nodes:
-      - gps_waypoint_follower
-      - behavior_server
-      - bt_navigator
       - controller_server
-      - lifecycle_manager_navigation
       - planner_server
       - smoother_server
+      - behavior_server
+      - bt_navigator
+      - bt_navigator_navigate_through_poses_rclcpp_node
+      - bt_navigator_navigate_to_pose_rclcpp_node
+      - waypoint_follower
+      - gps_waypoint_follower
       - velocity_smoother
-      - waypoint_follower      
-    
+      - lifecycle_manager            # executable
+      - lifecycle_manager_navigation # node
+      - global_costmap
+      - local_costmap
+      - component_container          # if use_composition:=True
+    highlight:
+      # A goal starts (all INFO)
+      - word: "Begin navigating .*"
+        regex: true
+        color: "@#FFFFFF"
+      - word: "Received follow waypoint request with \\d+ waypoints"
+        regex: true
+        color: "@#FFFFFF"
+      - word: "Received a goal, begin computing control effort"
+        color: "@#FFFFFF"
+      - word: "Starting a new loop, current loop count is \\d+"
+        regex: true
+        color: "@#FFFFFF"
+      # ... ends well
+      - word: "Goal succeeded"
+        color: "bold mint"
+      - word: "Reached the goal!"
+        color: "bold mint"
+      - word: "(Succeeded processing|Arrived at) (waypoint )?\\d+('th waypoint)?"
+        regex: true
+        color: "bold mint"
+      - word: "Completed all \\d+ waypoints requested"
+        regex: true
+        color: "bold mint"
+      - word: "\\w+ completed successfully"      # behaviors: spin, backup, wait, ...
+        regex: true
+        color: "bold mint"
+      # ... ends badly, at INFO level (Goal failed is ERROR: already red)
+      - word: "Failed to process waypoint \\d+, moving to next"
+        regex: true
+        color: "bold crimson"
+        inverted: true
+      - word: "Action server is inactive. Rejecting the goal"
+        color: "bold crimson"
+        inverted: true
+      - word: "Initial checks failed for \\w+"
+        regex: true
+        color: "bold crimson"
+        inverted: true
+      # ... is cancelled / preempted
+      - word: "Goal (canceled|is canceling|was canceled)"
+        regex: true
+        color: "bold violet"
+      - word: "Cancellation was successful"
+        color: "bold violet"
+      - word: "(Received goal preemption request|Preempting the goal pose)"
+        regex: true
+        color: "bold violet"
+      - word: "Canceling \\w+"
+        regex: true
+        color: "bold violet"
+      # Recovery behaviors (behavior_server "Running spin" etc.)
+      - word: "Running (spin|backup|wait|drive_on_heading|assisted_teleop)\\b"
+        regex: true
+        color: "bold violet"
+      # Lifecycle bringup
+      - word: "Starting managed nodes bringup"
+        color: "@#FFFFFF"
+      - word: "Managed nodes are (active|now configured)"
+        regex: true
+        color: "bold mint"
+      - word: "Managed nodes have been (shut down|reset|paused|cleaned up)"
+        regex: true
+        color: "bold violet"
+      - word: "Successfully re-established connections from server respawns"
+        color: "bold mint"
 
-
-
-defaults:
-  color_mode: tag_only
-  show_group_tag: true
-  unmatched_color: null
-  tag_style: inverted
+  mission:
+    color: "@#FFFFFF"
+    label: "MIS"
+    nodes:
+      - "send_gps_waypoints*"
+      - "heading_alignment*"
+    highlight:
+      - word: "Mission *: .*"
+        regex: true
+        color: "@#FFFFFF"
+      - word: "(AUTO|STEP) mode"
+        regex: true
+        case_sensitive: true
+        color: "@#FFFFFF"
+        inverted: true
+      - word: "Action server ready"
+        color: "bold mint"
+      - word: "Goal accepted, navigating"
+        color: "@#FFFFFF"
+      - word: "All waypoints completed"
+        color: "bold mint"
+      - word: "Interrupted by user"
+        color: "bold violet"
