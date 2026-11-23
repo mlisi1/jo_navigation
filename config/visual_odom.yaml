@@ -8,6 +8,12 @@
     sync_queue_size:            20
     image_transport:            "compressed"
     depth_transport:            "compressedDepth"
+    # Best-effort subscriptions: a reliable reader that falls behind makes CycloneDDS block the
+    # camera's publish(), which stalls its frame thread and drops frames (~1 s colour gaps with
+    # full_navigation on the robot, 2026-11-23). In rgbd_odometry `qos` also sets the outputs
+    # (odom, odom_info*) to best effort: the EKF subscribes best effort, so odom1 still matches.
+    qos:                        2         # 2 = best effort
+    qos_camera_info:            2
     database_path: ""
 
     # Odometry tuning
@@ -53,6 +59,9 @@
     sync_queue_size:            30
     image_transport:            "compressed"
     depth_transport:            "compressedDepth"
+    # Best-effort camera subscriptions (see rgbd_odometry above); only the inputs, outputs unchanged
+    qos_image:                  2
+    qos_camera_info:            2
     # database_path is set by the launch file (new file per run)
 
     # Mapping mode
