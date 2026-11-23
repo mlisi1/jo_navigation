@@ -772,7 +772,7 @@ class HeadingAlignmentNode(Node):
             if any(w.startswith(('GPS track not straight', 'GPS distance')) for w in fit['warnings']):
                 lines.append('  The GPS track does not match the straight drive GLIM measured: the heading may be '
                              'off by tens of degrees.\n  Better: n, then run again with a longer drive, e.g. '
-                             'heading_align -p calib_distance_m:=20.0')
+                             'heading_align 20')
         else:
             lines.append('Fit quality: OK')
         summary = '\n'.join(lines)

@@ -34,7 +34,7 @@ heading_alignment_node:
     # Calibration drive (open loop, no obstacle avoidance). In the 2026-11-23 field bags (RTK float /
     # single, sigma 1-3 m) 3-4 m stretches already gave the GLIM-to-ENU rotation within +-3 deg.
     calib_drive_speed_mps: 0.3
-    calib_distance_m: 10.0             # longer (heading_align -p calib_distance_m:=20.0) if the result warns
+    calib_distance_m: 10.0             # per run: `heading_align 5` / `heading_align 20` (longer if the result warns)
     calib_max_duration_s: 60.0         # at least 1.5x distance/speed
     calib_max_yawrate_dps: 8.0         # abort if the robot turns (not driving straight)
     calib_no_motion_timeout_s: 5.0     # abort if it doesn't move (base in RC mode?)
