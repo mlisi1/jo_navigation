@@ -33,12 +33,16 @@ ekf_filter_node_odom:
     odom1_differential: true
     
 
+    # IMU: yaw RATE only. The Xsens yaw (NorthReference, magnetometer) must not be fused: it is disturbed on
+    # the robot (field 2026-11-23: up to 60 deg behind GLIM after spins, |mag| 0.84-1.61x) and published with
+    # zero covariance, so the EKF trusted it over GLIM's yaw and the pose jumped 0.3-2.5 m per update
+    # (418 m path for 34 m driven). Yaw comes from GLIM (odom0). Replay of the field bag: EKF within 2 mm of GLIM.
     imu0: imu/data
     imu0_config: [false, false, false,
-                  false, false, true,   
-                  true, true, false,
-                  false, false, true,    
-                  false, false, false]
+                  false, false, false,   # no orientation
+                  false, false, false,   # (an Imu message has no linear velocity)
+                  false, false, true,    # vyaw
+                  false, false, false]   # accelerations
     imu0_differential: false
     imu0_relative: true
     imu0_remove_gravitational_acceleration: true
