@@ -48,6 +48,21 @@ Runs two EKF instances in tandem:
 ros2 launch jo_navigation localization_gps.launch.py 
 ```
 
+Heading: both EKFs take yaw from GLIM (the IMU gives only the yaw rate: the Xsens magnetometer yaw is
+disturbed on the robot). GLIM's `odom` frame has an arbitrary heading, so before every GPS mission run
+the **heading alignment** (`heading_align` alias in jo-zotac):
+
+```bash
+ros2 run jo_navigation heading_alignment_node.py --ros-args \
+    --params-file $(ros2 pkg prefix jo_navigation)/share/jo_navigation/config/heading_alignment.yaml
+```
+
+Enter starts a straight 10 m drive at 0.3 m/s (no obstacle avoidance: keep the RC/e-stop in hand, base in
+CAN mode), whatever the GPS quality; the node fits the GPS track, compares it with GLIM's heading, shows the
+result with any warnings, and Enter applies it to navsat_transform (`~/datum`). With warnings about the GPS
+track (not straight, distance mismatch) answer `n` and run it again with a longer drive
+(`-p calib_distance_m:=20.0`). Then start the mission.
+
 ## Navigation
 
 The navigation stack is built on Nav2 and requires a localization source to be running beforehand. Two configurations mirror the two localization modalities.

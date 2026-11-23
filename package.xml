@@ -15,6 +15,15 @@
   <depend>rclpy</depend>
   <depend>nav2_msgs</depend>
   <depend>sensor_msgs</depend>
+  <exec_depend>python3-numpy</exec_depend>
+  <depend>tf2_ros</depend>
+  <depend>robot_localization</depend>
+  <depend>rcl_interfaces</depend>
+  <depend>nmea_msgs</depend>
+  <depend>std_srvs</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

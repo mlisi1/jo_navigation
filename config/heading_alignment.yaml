@@ -1,0 +1,53 @@
+# heading_alignment_node (scripts/heading_alignment_node.py, alias `heading_align`): drives straight,
+# compares the GPS course with GLIM's heading and hands the GLIM-to-ENU rotation to navsat (~/datum).
+# Run it after full_gps_navigation is up and BEFORE the mission (send_gps).
+heading_alignment_node:
+  ros__parameters:
+    confirm_interface: stdin           # 'stdin' (Enter in the terminal) | 'service' (Trigger services)
+    dry_run: false                     # true: run everything, but never publish /cmd_vel
+
+    # Topics / services / frames
+    glim_odom_topic: /glim_ros/odometry/local   # the heading the EKFs use (localization_gps.yaml odom0)
+    nmea_topic: /nmea                  # GGA, used for the fix quality
+    gnss_topic: /gnss                  # raw NavSatFix, used for positions (NOT /odometry/gps: circular)
+    global_odom_topic: /odometry/global
+    imu_topic: /imu/data               # Xsens heading, logged for comparison only
+    cmd_vel_topic: /cmd_vel
+    base_link_frame: base_link
+    navsat_node: /navsat_transform_node
+    setutm_service: /setUTMZone
+    datum_service: /datum
+    utm_zone: "32N"
+
+    # Startup / timeouts
+    startup_topic_timeout_s: 15.0
+    glim_staleness_timeout_s: 1.0
+    gga_max_age_s: 1.0                 # max age of the GGA used to tag a /gnss fix with its quality
+    confirm_timeout_s: 600.0
+    service_call_retries: 3
+    service_timeout_s: 5.0
+
+    # GPS fixes used for the fit (GGA quality: 0 invalid, 1 single, 2 DGPS, 4 RTK fixed, 5 RTK float).
+    # The drive starts on Enter whatever the quality; 1 = single fixes count too.
+    fix_min_quality: 1
+
+    # Calibration drive (open loop, no obstacle avoidance). In the 2026-11-23 field bags (RTK float /
+    # single, sigma 1-3 m) 3-4 m stretches already gave the GLIM-to-ENU rotation within +-3 deg.
+    calib_drive_speed_mps: 0.3
+    calib_distance_m: 10.0             # longer (heading_align -p calib_distance_m:=20.0) if the result warns
+    calib_max_duration_s: 60.0         # at least 1.5x distance/speed
+    calib_max_yawrate_dps: 8.0         # abort if the robot turns (not driving straight)
+    calib_no_motion_timeout_s: 5.0     # abort if it doesn't move (base in RC mode?)
+    calib_settle_s: 2.0                # zero-velocity period after every stop
+    cmd_vel_publish_rate_hz: 10.0
+
+    # Hard gates: no heading without these
+    calib_min_fix_count: 3
+    calib_min_gps_extent_m: 2.0
+    calib_direction_sanity_deg: 90.0   # GLIM travel vs forward axis; reversed motion -> FAIL
+    # Soft gates: only warnings, shown before Enter applies the result
+    calib_warn_fix_count: 10
+    calib_warn_fit_residual_m: 0.5
+    calib_warn_distance_mismatch_ratio: 0.3
+
+    apply_verify_tolerance_m: 3.0      # warn if /odometry/gps lands this far from the robot's map pose
