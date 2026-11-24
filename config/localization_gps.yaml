@@ -93,7 +93,7 @@ navsat_transform_node:
     delay: 0.0
     zero_altitude: true
     magnetic_declination_radians: 0.0  # adjust for your location (Pisa ~0.04 rad)
-    yaw_offset: 1.57                    # offset between IMU yaw and true north    zero_altitude: true                # flatten to 2D
+    yaw_offset: 0.0                     # 1.57 compensated the Xsens mounted 90 deg off (x = robot right); fixed in the device on 2026-11-24 (RotSensor yaw, xsens_settings), so the IMU frame = base_link now
     broadcast_cartesian_transform: true      # publishes utm→map transform
     broadcast_cartesian_transform_as_parent_frame: true
     publish_filtered_gps: true         # republishes GPS in filtered form
