@@ -61,7 +61,7 @@ controller_server:
       lambda: 2.0
       v_linear_min: 0.2
       v_linear_max: 1.5
-      v_angular_max: 5.0
+      v_angular_max: 2.0          # = the velocity smoother's limit: with 5 it asked up to 7.8 rad/s, the smoother cut it to 2 and the base turns ~1.2-1.6, so the controller overshot and kept correcting at the goal
       v_angular_min_in_place: 1.0
       slowdown_radius: 1.5
       footprint_scaling_linear_vel: 0.5
