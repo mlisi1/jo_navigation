@@ -167,6 +167,7 @@ groups:
     nodes:
       - "send_gps_waypoints*"
       - "heading_alignment*"
+      - "demo_circle*"
     highlight:
       - word: "Mission *: .*"
         regex: true

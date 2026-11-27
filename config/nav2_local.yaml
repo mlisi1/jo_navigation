@@ -234,7 +234,7 @@ velocity_smoother:
     smoothing_frequency: 20.0
     scale_velocities: False
     feedback: "OPEN_LOOP"
-    max_velocity: [0.56, 0.0, 1.0]
+    max_velocity: [0.7, 0.0, 1.0]   # the local navigation's speed cap (the controller asks up to 1.5)
     min_velocity: [-0.26, 0.0, -1.0]
     max_accel: [2.5, 0.0, 3.2]
     max_decel: [-2.5, 0.0, -3.2]

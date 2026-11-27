@@ -83,6 +83,17 @@ This launches:
 
 To command the robot, use the **2D Goal Pose** tool in RViz and click a target on the map. Set the fixed frame to `odom`.
 
+**Demo circle**: a circle of waypoints around the robot (`demo_circle <radius_m> <points>` alias in jo-zotac).
+The robot's current pose is the centre; the first waypoint is straight ahead on the circumference, the others
+evenly spaced counter-clockwise, each oriented along the tangent (Nav2 `follow_waypoints`, `odom` frame).
+
+```bash
+ros2 run jo_navigation demo_circle.py --ros-args -p radius_m:=5.0 -p points:=15
+# optional: -p clockwise:=true, -p close_loop:=true (the first waypoint again at the end)
+```
+
+Speed: the velocity smoother caps the local navigation at 0.7 m/s (`nav2_local.yaml`).
+
 ### Global navigation
 
 Uses the `map` frame published by the global EKF. Supports navigation over larger areas with GPS-anchored pose estimates.

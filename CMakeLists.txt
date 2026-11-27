@@ -15,6 +15,7 @@ install(
   PROGRAMS  scripts/send_gps_waypoints.py
             scripts/heading_alignment_node.py
             scripts/csv_to_mission.py
+            scripts/demo_circle.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
